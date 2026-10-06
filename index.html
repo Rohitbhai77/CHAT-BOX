@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Chat Box</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#0b0c16;color:#eef2ff}
+button,input{font:inherit}
+button{cursor:pointer;border:0}
+
+body{display:flex;justify-content:center;align-items:center;overflow:hidden;background:radial-gradient(circle at 15% 15%,#261547 0,#0d0e1a 45%,#05060b 100%)}
+
+.app{width:min(100%,1150px);height:min(100%,820px);background:rgba(18,19,34,.92);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.08);box-shadow:0 30px 90px rgba(0,0,0,.6);overflow:hidden;border-radius:20px;display:flex}
+.screen{height:100%;width:100%;display:flex}
+
+/* Auth Section */
+.auth{align-items:center;justify-content:center;padding:24px}
+.card{width:min(440px,100%);padding:36px;border-radius:24px;background:rgba(25,27,49,.92);border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 60px rgba(0,0,0,.45)}
+
+.logo{width:62px;height:62px;display:grid;place-items:center;border-radius:20px;background:linear-gradient(135deg,#8b5cf6,#06b6d4);font-size:30px;box-shadow:0 12px 30px rgba(139,92,246,.3)}
+
+/* Custom Sleek Dark Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(129, 140, 248, 0.25);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(129, 140, 248, 0.5);
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(129, 140, 248, 0.25) transparent;
+}
+
+/* Left Sidebar */
+.sidebar {
+  width: 350px;
+  background: linear-gradient(180deg, #101222 0%, #0c0e1a 100%) !important;
+  border-right: 1px solid rgba(129, 140, 248, 0.12) !important;
+  display: flex;
+  flex-direction: column;
+}
+.sideHead {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(18, 20, 38, 0.7) !important;
+  backdrop-filter: blur(10px);
+}
+.meInfo{display:flex;align-items:center;gap:12px}
+.meName{font-weight:700;color:#f8fafc;font-size:14.5px}
+.meUser{font-size:12px;color:#818cf8;margin-top:2px}
+.searchWrap{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.05)}
+
+.chatList{flex:1;overflow-y:auto;padding:8px}
+.chatItem{width:100%;display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;margin-bottom:4px;background:transparent;color:#f1f5f9;text-align:left;transition:background .15s}
+.chatItem:hover{background:rgba(129, 140, 248, 0.08) !important}
+.chatItem.active{background:rgba(114, 46, 209, 0.25) !important;border-left:3px solid #818cf8}
+
+.avatar{width:42px;height:42px;flex:0 0 42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#6366f1,#06b6d4);color:#fff;font-weight:800;font-size:15px;position:relative}
+.onlineDot{position:absolute;bottom:0;right:0;width:11px;height:11px;background:#22c55e;border:2px solid #0e101f;border-radius:50%;display:none}
+
+.chatItem .info{flex:1;min-width:0}
+.chatItem .topLine{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px}
+.chatItem .rName{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chatItem .rTime{font-size:11px;color:#64748b}
+.chatItem .bottomLine{display:flex;align-items:center;gap:5px;font-size:12.5px;color:#94a3b8}
+.chatItem .lastMsg{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+
+.empty{padding:26px;text-align:center;color:#64748b;font-size:13px;line-height:1.5}
+
+.stylish-heading{
+  margin:18px 0 6px;
+  font-size:32px;
+  font-weight:900;
+  letter-spacing:-0.5px;
+  background:linear-gradient(90deg, #38bdf8, #818cf8, #c084fc, #38bdf8);
+  background-size:250% auto;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:shineGrad 4s linear infinite;
+}
+@keyframes shineGrad{
+  0%{background-position:0% center}
+  100%{background-position:250% center}
+}
+
+.sub{margin:0 0 22px;color:#94a3b8;line-height:1.5;font-size:14px}
+
+.tabs{display:flex;gap:6px;background:#101124;padding:6px;border-radius:14px;margin-bottom:20px;border:1px solid rgba(255,255,255,.06)}
+.tabs button{flex:1;padding:12px;border-radius:10px;background:transparent;color:#94a3b8;font-weight:600;font-size:14px;transition:all .2s ease}
+.tabs button.active{background:#2e2456;color:#38bdf8;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+
+.field{margin:14px 0}
+.field label{display:block;font-size:11px;font-weight:700;letter-spacing:.8px;color:#818cf8;margin-bottom:8px}
+.field input,.search{width:100%;padding:13px 15px;border-radius:13px;border:1px solid #2d3056;background:#101222;color:#fff;outline:none;transition:border-color .2s}
+.field input:focus,.search:focus{border-color:#818cf8;box-shadow:0 0 0 3px rgba(129,140,248,.15)}
+
+.password-box{position:relative;display:flex;align-items:center}
+.password-box input{padding-right:45px}
+.eye-btn{position:absolute;right:12px;background:transparent;border:0;color:#94a3b8;display:flex;align-items:center;justify-content:center;padding:6px;border-radius:8px;transition:color .2s}
+.eye-btn:hover{color:#38bdf8}
+.eye-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.primary{width:100%;padding:14px;border-radius:13px;background:linear-gradient(135deg,#7c3aed,#0284c7);color:#fff;font-weight:700;font-size:15px;margin-top:16px;box-shadow:0 10px 25px rgba(124,58,237,.3);transition:opacity .2s}
+.primary:hover{opacity:.95}
+.primary:disabled{opacity:.6;cursor:not-allowed}
+.secondary{padding:8px 14px;border-radius:10px;background:#232644;color:#cbd5e1;font-weight:600;font-size:13px;transition:background .2s}
+.secondary:hover{background:#2e3258}
+
+.hint{font-size:12px;color:#64748b;margin-top:14px;line-height:1.4}
+.error{font-size:13px;color:#ff6b6b;margin-top:10px;min-height:18px;font-weight:600}
+
+/* Chat Area */
+.chat{flex:1;display:flex;flex-direction:column;min-width:0;background:#0d0e1a}
+.chatHead{height:72px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;background:#101222}
+.chatHeadLeft{display:flex;align-items:center;gap:12px}
+.chatHeadActions{display:flex;align-items:center;gap:8px}
+
+.backMobile{display:none;background:none;color:#fff;font-size:26px;padding:0 8px 0 0}
+.chatTitleWrap{display:flex;align-items:center;gap:8px}
+.chatTitle{font-weight:700;font-size:15.5px;color:#f8fafc}
+.nickBadge{font-size:11px;background:#232746;color:#818cf8;padding:2px 8px;border-radius:6px;border:1px solid rgba(129,140,248,.25)}
+.chatStatus{font-size:12px;color:#94a3b8;margin-top:2px}
+.chatStatus.online{color:#22c55e;font-weight:600}
+
+.iconBtn{background:rgba(255,255,255,.05);color:#cbd5e1;border:1px solid rgba(255,255,255,.08);padding:6px 12px;border-radius:10px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;transition:background .2s}
+.iconBtn:hover{background:rgba(255,255,255,.1);color:#fff}
+.closeChatBtn{background:rgba(239, 68, 68, 0.12);color:#fca5a5;border:1px solid rgba(239, 68, 68, 0.25)}
+.closeChatBtn:hover{background:rgba(239, 68, 68, 0.25);color:#fff}
+
+.messages{flex:1;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:8px;background:radial-gradient(circle at 80% 20%,rgba(124,58,237,.07),transparent 40%)}
+.bubble{max-width:min(70%,520px);padding:10px 14px;border-radius:16px;line-height:1.45;word-break:break-word;font-size:14px;position:relative}
+.mine{align-self:flex-end;background:linear-gradient(135deg,#6d28d9,#4f46e5);color:#fff;border-bottom-right-radius:4px;box-shadow:0 4px 15px rgba(109,40,217,.25)}
+.theirs{align-self:flex-start;background:#1e213a;color:#f1f5f9;border-bottom-left-radius:4px;border:1px solid rgba(255,255,255,.05)}
+.bubbleBottom{float:right;display:inline-flex;align-items:center;gap:4px;margin-left:14px;margin-top:4px;font-size:10px;color:rgba(255,255,255,.65)}
+
+/* Tick Styling */
+.tick{font-size:13px;font-weight:700;line-height:1;margin-left:3px}
+.tick-sent{color:rgba(255,255,255,.55)}
+.tick-delivered{color:rgba(255,255,255,.85)}
+.tick-read{color:#22c55e;font-weight:800}
+
+.composer{display:flex;gap:10px;padding:14px 18px;border-top:1px solid rgba(255,255,255,.07);background:#101222;position:relative}
+.composer input{flex:1;padding:12px 16px;border-radius:14px;border:1px solid #282c4b;background:#17192e;color:#fff;outline:none}
+.composer input:disabled{background:#111222;border-color:#1c1e36;color:#555a75;cursor:not-allowed}
+.send{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#0284c7);color:#fff;font-size:18px;display:grid;place-items:center}
+.send:disabled{opacity:.4;cursor:not-allowed}
+
+.welcome{height:100%;display:grid;place-items:center;text-align:center;color:#64748b;padding:30px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1f223d;border:1px solid rgba(255,255,255,.1);color:#fff;padding:12px 18px;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.5);z-index:20;font-size:13px;display:none}
+
+@media(max-width:750px){
+  body{align-items:stretch}
+  .app{width:100%;height:100%;border:0;border-radius:0}
+  .sidebar{width:100%}
+  .chat{display:none}
+  .app.chat-open .sidebar{display:none}
+  .app.chat-open .chat{display:flex}
+  .backMobile{display:block}
+  .bubble{max-width:85%}
+}
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+  <section class="screen auth" id="authScreen">
+    <div class="card">
+      <div class="logo">💬</div>
+      <h1 class="stylish-heading">Chat Box</h1>
+      <p class="sub">Create your account, choose a unique username and chat privately.</p>
+
+      <div class="tabs">
+        <button id="loginTab" type="button" class="active">Login</button>
+        <button id="signupTab" type="button">Create account</button>
+      </div>
+
+      <div id="usernameField" class="field" style="display:none;">
+        <label>USERNAME</label>
+        <input id="username" maxlength="20" placeholder="rohit_123" autocomplete="username">
+      </div>
+
+      <div class="field">
+        <label>EMAIL</label>
+        <input id="email" type="email" placeholder="you@example.com" autocomplete="email">
+      </div>
+
+      <div class="field">
+        <label>PASSWORD</label>
+        <div class="password-box">
+          <input id="password" type="password" placeholder="Minimum 6 characters" autocomplete="current-password">
+          <button type="button" class="eye-btn" id="eyeToggleBtn" title="Show/Hide Password">
+            <svg id="eyeIcon" viewBox="0 0 24 24">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <button class="primary" id="authButton" type="button">Login</button>
+      <div class="error" id="authError"></div>
+      <div class="hint" id="authHint">Your email is used only for account login.</div>
+    </div>
+  </section>
+
+  <section class="screen" id="mainScreen" style="display:none;">
+    <aside class="sidebar">
+      <div class="sideHead">
+        <div class="meInfo">
+          <div class="avatar" id="myAvatar">?</div>
+          <div>
+            <div class="meName" id="meName">User</div>
+            <div class="meUser" id="meUser">@username</div>
+          </div>
+        </div>
+        <button class="secondary" id="logoutButton" type="button">Logout</button>
+      </div>
+
+      <div class="searchWrap">
+        <input class="search" id="searchInput" placeholder="Search contacts or usernames..." autocomplete="off">
+      </div>
+
+      <div class="chatList" id="chatList">
+        <div class="empty">Loading chat history...</div>
+      </div>
+    </aside>
+
+    <main class="chat">
+      <header class="chatHead">
+        <div class="chatHeadLeft">
+          <button class="backMobile" id="backMobile" type="button">‹</button>
+          <div class="avatar" id="chatAvatar">?<div class="onlineDot" id="headOnlineDot"></div></div>
+          <div>
+            <div class="chatTitleWrap">
+              <span class="chatTitle" id="chatTitle">Select a user</span>
+              <span class="nickBadge" id="chatNickBadge" style="display:none;"></span>
+            </div>
+            <div class="chatStatus" id="chatStatus">Search username on the left to start</div>
+          </div>
+        </div>
+        
+        <div class="chatHeadActions">
+          <button class="iconBtn" id="setNickBtn" type="button" style="display:none;">✏️ Nickname</button>
+          <button class="iconBtn closeChatBtn" id="closeChatBtn" type="button" title="Close chat (ESC)" style="display:none;">✕ Close</button>
+        </div>
+      </header>
+
+      <div class="messages" id="messages">
+        <div class="welcome">
+          <div>
+            <strong style="background:linear-gradient(90deg,#38bdf8,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:20px;display:block;margin-bottom:6px">Chat Box</strong>
+            Left side se kisi ko select karein ya username search karke messaging shuru karein.
+          </div>
+        </div>
+      </div>
+
+      <div class="composer" id="composerWrap">
+        <input id="messageInput" placeholder="Pehle user select karein..." autocomplete="off" disabled>
+        <button class="send" id="sendButton" type="button" disabled>➤</button>
+      </div>
+    </main>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var SUPABASE_URL = 'https://qtftkrssonozonsxhiqn.supabase.co';
+var SUPABASE_KEY = 'sb_publishable_bUvA4RRkBVqs8hq5o8_XNg_DOSfV7fY';
+
+var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+var mode = 'login';
+var currentUser = null;
+var currentProfile = null;
+var currentTarget = null;
+var currentConversation = null;
+var messageChannel = null;
+var globalChannel = null;
+var toastTimer = null;
+var cachedNicknames = {};
+var onlineUserIds = new Set();
+
+var $ = function(id) { return document.getElementById(id); };
+function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function initials(name){ return (name || '?').trim().charAt(0).toUpperCase() || '?'; }
+
+function toast(msg){
+  var t = $('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.style.display = 'none'; }, 2600);
+}
+
+// Close Active Chat Function
+function closeActiveChat() {
+  if (!currentTarget) return;
+  currentTarget = null;
+  currentConversation = null;
+  
+  if (messageChannel) {
+    supabaseClient.removeChannel(messageChannel);
+    messageChannel = null;
+  }
+
+  $('chatTitle').textContent = 'Select a user';
+  $('chatNickBadge').style.display = 'none';
+  $('chatStatus').textContent = 'Search username on the left to start';
+  $('chatStatus').className = 'chatStatus';
+  $('chatAvatar').innerHTML = '?<div class="onlineDot" id="headOnlineDot"></div>';
+  $('setNickBtn').style.display = 'none';
+  $('closeChatBtn').style.display = 'none';
+
+  var inp = $('messageInput');
+  inp.value = '';
+  inp.disabled = true;
+  inp.placeholder = 'Pehle user select karein...';
+  $('sendButton').disabled = true;
+
+  $('messages').innerHTML = `
+    <div class="welcome">
+      <div>
+        <strong style="background:linear-gradient(90deg,#38bdf8,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:20px;display:block;margin-bottom:6px">Chat Box</strong>
+        Left side se kisi ko select karein ya username search karke messaging shuru karein.
+      </div>
+    </div>
+  `;
+
+  $('app').classList.remove('chat-open');
+  loadChatHistory();
+}
+
+$('closeChatBtn').onclick = closeActiveChat;
+$('backMobile').onclick = closeActiveChat;
+
+// ESC Key listener
+window.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' || e.keyCode === 27) {
+    if (currentTarget) {
+      closeActiveChat();
+    }
+  }
+});
+
+$('composerWrap').onclick = function() {
+  if (!currentTarget) {
+    toast('Pehle left side me user search karke select karein!');
+    $('searchInput').focus();
+  }
+};
+
+function setAuthMode(targetMode) {
+  mode = targetMode;
+  var isSignup = targetMode === 'signup';
+  $('loginTab').classList.toggle('active', !isSignup);
+  $('signupTab').classList.toggle('active', isSignup);$('usernameField').style.display = isSignup ? 'block' : 'none';
+  $('authButton').textContent = isSignup ? 'Create account' : 'Login';
+  $('password').setAttribute('autocomplete', isSignup ? 'new-password' : 'current-password');
+  $('authError').textContent = '';
+}
+
+$('loginTab').onclick = function(e) { e.preventDefault(); setAuthMode('login'); };$('signupTab').onclick = function(e) { e.preventDefault(); setAuthMode('signup'); };
+
+$('eyeToggleBtn').onclick = function(e) {
+  e.preventDefault();
+  var pwd = $('password');
+  var eye = $('eyeIcon');
+  if (pwd.type === 'password') {
+    pwd.type = 'text';
+    eye.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+  } else {
+    pwd.type = 'password';
+    eye.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+  }
+};
+
+async function executeAuth() {
+  var btn = $('authButton');
+  var errEl = $('authError');
+  errEl.textContent = '';
+
+  var email = $('email').value.trim();
+  var password = $('password').value;
+  var username = $('username').value.trim();
+
+  if (!email || !password) {
+    errEl.textContent = 'Email aur password likhna zaroori hai.';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+
+  try {
+    if (mode === 'signup') {
+      if (!username) throw new Error('Username enter karein.');
+      if (!/^[A-Za-z0-9_]{3,20}$/.test(username)) throw new Error('Username 3-20 characters ka hona chahiye.');
+
+      var checkRes = await supabaseClient.from('profiles').select('id').eq('username', username).maybeSingle();
+      if (checkRes.data) throw new Error('Yeh username pehle se exist karta hai.');
+
+      var authRes = await supabaseClient.auth.signUp({
+        email: email, password: password,
+        options: { data: { username: username, display_name: username } }
+      });
+
+      if (authRes.error) throw authRes.error;
+
+      if (authRes.data && authRes.data.user) {
+        if (authRes.data.session) {
+          await supabaseClient.from('profiles').upsert({ id: authRes.data.user.id, username: username, display_name: username });
+          await showMain(authRes.data.user);
+        } else {
+          toast('Account ban gaya! Ab login karein.');
+          errEl.style.color = '#38bdf8';
+          errEl.textContent = 'Account ban gaya hai. Login tab par jaakar sign in karein.';
+          setAuthMode('login');
+        }
+      }
+    } else {
+      var loginRes = await supabaseClient.auth.signInWithPassword({ email: email, password: password });
+      if (loginRes.error) throw loginRes.error;
+      await showMain(loginRes.data.user);
+    }
+  } catch (err) {
+    errEl.style.color = '#ff6b6b';
+    errEl.textContent = err.message || 'Error occurred.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = (mode === 'signup') ? 'Create account' : 'Login';
+  }
+}
+
+$('authButton').onclick = executeAuth;
+$('password').addEventListener('keydown', function(e) { if (e.key === 'Enter') executeAuth(); });
+
+async function showMain(user) {
+  currentUser = user;
+  var profileRes = await supabaseClient.from('profiles').select('*').eq('id', user.id).maybeSingle();
+  var profile = profileRes.data;
+
+  if (!profile) {
+    var rawName = (user.user_metadata && user.user_metadata.username) ? user.user_metadata.username : 'user_' + Math.floor(Math.random()*1000);
+    var createRes = await supabaseClient.from('profiles').upsert({ id: user.id, username: rawName, display_name: rawName }).select().single();
+    profile = createRes.data;
+  }
+
+  currentProfile = profile;
+  $('meName').textContent = profile.display_name || profile.username;
+  $('meUser').textContent = '@' + profile.username;
+  $('myAvatar').textContent = initials(profile.username);
+
+  $('authScreen').style.display = 'none';$('mainScreen').style.display = 'flex';
+
+  await loadNicknames();
+  await loadChatHistory();
+  setupOnlinePresence();
+}
+
+$('logoutButton').onclick = async function() {
+  await supabaseClient.auth.signOut();
+  location.reload();
+};
+
+function setupOnlinePresence() {
+  globalChannel = supabaseClient.channel('online_presence', {
+    config: { presence: { key: currentUser.id } }
+  });
+
+  globalChannel
+    .on('presence', { event: 'sync' }, function() {
+      var state = globalChannel.presenceState();
+      onlineUserIds.clear();
+      for (var id in state) {
+        onlineUserIds.add(id);
+      }
+      updateActiveUserPresence();
+      autoDeliverUndeliveredMessages();
+    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'direct_messages' }, function() {
+      loadChatHistory();
+    })
+    .subscribe(async function(status) {
+      if (status === 'SUBSCRIBED') {
+        await globalChannel.track({ user_id: currentUser.id, online_at: new Date().toISOString() });
+      }
+    });
+
+  window.addEventListener('online', function() {
+    globalChannel.track({ user_id: currentUser.id, online_at: new Date().toISOString() });
+    autoDeliverUndeliveredMessages();
+  });
+}
+
+function updateActiveUserPresence() {
+  if (!currentTarget) return;
+  var isOnline = onlineUserIds.has(currentTarget.id);
+  var dot = $('headOnlineDot');
+  var statusText = $('chatStatus');
+
+  if (isOnline) {
+    dot.style.display = 'block';
+    statusText.textContent = 'Online';
+    statusText.className = 'chatStatus online';
+  } else {
+    dot.style.display = 'none';
+    statusText.textContent = '@' + currentTarget.username;
+    statusText.className = 'chatStatus';
+  }
+}
+
+async function autoDeliverUndeliveredMessages() {
+  if (!currentUser) return;
+  await supabaseClient.from('direct_messages')
+    .update({ status: 'delivered' })
+    .neq('sender_id', currentUser.id)
+    .eq('status', 'sent');
+}
+
+function renderTick(status) {
+  if (status === 'read') {
+    return '<span class="tick tick-read" title="Read">✓✓</span>';
+  } else if (status === 'delivered') {
+    return '<span class="tick tick-delivered" title="Delivered">✓✓</span>';
+  }
+  return '<span class="tick tick-sent" title="Sent">✓</span>';
+}
+
+async function loadNicknames() {
+  try {
+    var res = await supabaseClient.from('contact_nicknames').select('contact_id, nickname').eq('user_id', currentUser.id);
+    if (res.data) {
+      cachedNicknames = {};
+      res.data.forEach(function(n) { cachedNicknames[n.contact_id] = n.nickname; });
+    }
+  } catch(e) {}
+}
+
+$('setNickBtn').onclick = async function() {
+  if (!currentTarget) return;
+  var curr = cachedNicknames[currentTarget.id] || '';
+  var name = prompt('Nickname for @' + currentTarget.username + ':', curr);
+  if (name === null) return;
+  name = name.trim();
+
+  if (name) {
+    await supabaseClient.from('contact_nicknames').upsert({ user_id: currentUser.id, contact_id: currentTarget.id, nickname: name });
+    cachedNicknames[currentTarget.id] = name;
+  } else {
+    await supabaseClient.from('contact_nicknames').delete().match({ user_id: currentUser.id, contact_id: currentTarget.id });
+    delete cachedNicknames[currentTarget.id];
+  }
+  updateHeaderDetails();
+  loadChatHistory();
+};
+
+function updateHeaderDetails() {
+  var nick = cachedNicknames[currentTarget.id];
+  if (nick) {
+    $('chatTitle').textContent = nick;
+    $('chatNickBadge').textContent = '@' + currentTarget.username;
+    $('chatNickBadge').style.display = 'inline-block';
+  } else {
+    $('chatTitle').textContent = currentTarget.display_name || currentTarget.username;
+    $('chatNickBadge').style.display = 'none';
+  }
+}
+
+// Guaranteed Left-Side Chat History
+async function loadChatHistory() {
+  try {
+    // 1. Fetch conversations
+    var convsRes = await supabaseClient.from('conversations')
+      .select('id, user1_id, user2_id, updated_at')
+      .or('user1_id.eq.' + currentUser.id + ',user2_id.eq.' + currentUser.id);
+
+    var convs = convsRes.data || [];
+    var chatListItems = [];
+
+    for (var c of convs) {
+      var otherId = (c.user1_id === currentUser.id) ? c.user2_id : c.user1_id;
+      
+      // Fetch user profile
+      var profRes = await supabaseClient.from('profiles').select('id, username, display_name').eq('id', otherId).maybeSingle();
+      if (!profRes.data) continue;
+      var userObj = profRes.data;
+
+      // Fetch last message for exact time and sorting
+      var lastMsgRes = await supabaseClient.from('direct_messages')
+        .select('message, sender_id, status, created_at')
+        .eq('conversation_id', c.id)
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+      var lastMsg = (lastMsgRes.data && lastMsgRes.data[0]) || null;
+      var timeMs = lastMsg ? new Date(lastMsg.created_at).getTime() : (c.updated_at ? new Date(c.updated_at).getTime() : 0);
+
+      chatListItems.push({
+        convId: c.id,
+        user: userObj,
+        lastMsg: lastMsg,
+        timeMs: timeMs
+      });
+    }
+
+    // Sort by most recent interaction (latest message always on top)
+    chatListItems.sort(function(a, b) {
+      return b.timeMs - a.timeMs;
+    });
+
+    if (!chatListItems.length) {
+      $('chatList').innerHTML = '<div class="empty">No conversations yet.<br>Search a username above to begin.</div>';
+      return;
+    }
+
+    var html = '';
+    for (var item of chatListItems) {
+      var u = item.user;
+      var m = item.lastMsg;
+      var title = cachedNicknames[u.id] || u.display_name || u.username;
+      var timeStr = m ? new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+      var tick = (m && m.sender_id === currentUser.id) ? (renderTick(m.status) + ' ') : '';
+      var isActive = (currentTarget && currentTarget.id === u.id) ? 'active' : '';
+
+      html += `
+        <div class="chatItem ${isActive}" onclick="openChatById('${u.id}')">
+          <div class="avatar">${escapeHtml(initials(u.username))}</div>
+          <div class="info">
+            <div class="topLine">
+              <span class="rName">${escapeHtml(title)}</span>
+              <span class="rTime">${timeStr}</span>
+            </div>
+            <div class="bottomLine">
+              <span class="lastMsg">${tick}${escapeHtml(m ? m.message : 'Chat started')}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    $('chatList').innerHTML = html;
+  } catch(e) {
+    console.error("Load Chat History Error:", e);
+  }
+}
+
+var searchTimer = null;
+$('searchInput').addEventListener('input', function() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(performSearch, 200);
+});
+
+$('searchInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    performSearch(true);
+  }
+});
+
+async function performSearch(openFirst) {
+  var q = $('searchInput').value.trim();
+  if (!q) { loadChatHistory(); return; }
+
+  var res = await supabaseClient.from('profiles').select('id, username, display_name')
+    .ilike('username', q + '%')
+    .neq('id', currentUser.id)
+    .limit(15);
+
+  if (!res.data || !res.data.length) {
+    $('chatList').innerHTML = '<div class="empty">No users found with username "' + escapeHtml(q) + '"</div>';
+    return;
+  }
+
+  if (openFirst && res.data.length > 0) {
+    openConversation(res.data[0]);
+    return;
+  }
+
+  $('chatList').innerHTML = res.data.map(function(u) {
+    var name = cachedNicknames[u.id] || u.display_name || u.username;
+    return `
+      <div class="chatItem" onclick="openChatById('${u.id}')">
+        <div class="avatar">${escapeHtml(initials(u.username))}</div>
+        <div class="info">
+          <div class="topLine"><span class="rName">${escapeHtml(name)}</span></div>
+          <div class="bottomLine">@${escapeHtml(u.username)}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function openChatById(targetId) {
+  var res = await supabaseClient.from('profiles').select('*').eq('id', targetId).single();
+  if (res.data) openConversation(res.data);
+}
+
+async function getOrCreateConversation(targetId) {
+  var u1 = (currentUser.id < targetId) ? currentUser.id : targetId;
+  var u2 = (currentUser.id < targetId) ? targetId : currentUser.id;
+
+  var convRes = await supabaseClient.from('conversations').select('*').eq('user1_id', u1).eq('user2_id', u2).maybeSingle();
+  var data = convRes.data;
+
+  if (!data) {
+    var insertRes = await supabaseClient.from('conversations').insert({ user1_id: u1, user2_id: u2 }).select().single();
+    data = insertRes.data;
+  }
+  return data;
+}
+
+async function openConversation(target) {
+  currentTarget = target;
+  currentConversation = await getOrCreateConversation(target.id);
+
+  updateHeaderDetails();
+  updateActiveUserPresence();
+  $('chatAvatar').innerHTML = initials(target.username) + '<div class="onlineDot" id="headOnlineDot"></div>';
+  $('setNickBtn').style.display = 'inline-flex';$('closeChatBtn').style.display = 'inline-flex';
+
+  var inp = $('messageInput');
+  inp.disabled = false;
+  inp.placeholder = 'Type a message...';
+  $('sendButton').disabled = false;
+  $('app').classList.add('chat-open');
+
+  await loadMessages();
+  await markMessagesAsRead();
+  subscribeMessages();
+  loadChatHistory();
+  setTimeout(function(){ inp.focus(); }, 100);
+}
+
+async function loadMessages() {
+  var msgRes = await supabaseClient.from('direct_messages').select('*').eq('conversation_id', currentConversation.id).order('created_at', { ascending: true });
+  $('messages').innerHTML = '';
+  if (msgRes.data) msgRes.data.forEach(renderBubble);
+  scrollBottom();
+}
+
+function renderBubble(m) {
+  var existing = document.querySelector('[data-msg-id="' + m.id + '"]');
+  var mine = m.sender_id === currentUser.id;
+  var time = new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  var statusHtml = mine ? renderTick(m.status) : '';
+
+  if (existing) {
+    existing.querySelector('.bubbleBottom').innerHTML = time + ' ' + statusHtml;
+    return;
+  }
+
+  var wrap = document.createElement('div');
+  wrap.className = 'bubble ' + (mine ? 'mine' : 'theirs');
+  wrap.dataset.msgId = m.id;
+  wrap.innerHTML = `
+    <span>${escapeHtml(m.message)}</span>
+    <span class="bubbleBottom">${time} ${statusHtml}</span>
+  `;
+  $('messages').appendChild(wrap);
+}
+
+function scrollBottom() {
+  $('messages').scrollTop =$('messages').scrollHeight;
+}
+
+function subscribeMessages() {
+  if (messageChannel) supabaseClient.removeChannel(messageChannel);
+
+  messageChannel = supabaseClient.channel('chat_msgs_' + currentConversation.id)
+    .on('postgres_changes', {
+      event: 'INSERT', schema: 'public', table: 'direct_messages',
+      filter: 'conversation_id=eq.' + currentConversation.id
+    }, async function(payload) {
+      renderBubble(payload.new);
+      scrollBottom();
+      if (payload.new.sender_id !== currentUser.id) {
+        await markMessagesAsRead();
+      }
+      loadChatHistory();
+    })
+    .on('postgres_changes', {
+      event: 'UPDATE', schema: 'public', table: 'direct_messages',
+      filter: 'conversation_id=eq.' + currentConversation.id
+    }, function(payload) {
+      renderBubble(payload.new);
+    })
+    .subscribe();
+}
+
+async function markMessagesAsRead() {
+  if (!currentConversation) return;
+  await supabaseClient.from('direct_messages')
+    .update({ status: 'read', read_at: new Date().toISOString() })
+    .eq('conversation_id', currentConversation.id)
+    .neq('sender_id', currentUser.id)
+    .neq('status', 'read');
+}
+
+async function sendMessage() {
+  var input = $('messageInput');
+  var text = input.value.trim();
+  if (!text || !currentConversation || !currentTarget) return;
+  input.value = '';
+
+  var isTargetOnline = onlineUserIds.has(currentTarget.id);
+  var initialStatus = isTargetOnline ? 'delivered' : 'sent';
+
+  await supabaseClient.from('direct_messages').insert({
+    conversation_id: currentConversation.id,
+    sender_id: currentUser.id,
+    message: text,
+    status: initialStatus
+  });
+
+  await supabaseClient.from('conversations').update({ updated_at: new Date().toISOString() }).eq('id', currentConversation.id);
+  loadChatHistory();
+  input.focus();
+}
+
+$('sendButton').onclick = sendMessage;
+$('messageInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+window.addEventListener('DOMContentLoaded', async function() {
+  if (supabaseClient) {
+    var sessionRes = await supabaseClient.auth.getSession();
+    if (sessionRes.data && sessionRes.data.session) {
+      showMain(sessionRes.data.session.user);
+    }
+  }
+});
+</script>
+</body>
+</html>
