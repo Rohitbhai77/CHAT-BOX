@@ -173,6 +173,274 @@ body{display:flex;justify-content:center;align-items:center;overflow:hidden;back
   .backMobile{display:block}
   .bubble{max-width:85%}
 }
+
+
+/* =========================================================
+   RESPONSIVE FIT FIX
+   Keeps the full UI visible on desktop, tablets and phones.
+   ========================================================= */
+html, body {
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100dvh;
+  height: auto;
+  padding: 16px;
+  overflow: auto;
+}
+
+.app {
+  width: min(1150px, 100%);
+  height: min(820px, calc(100dvh - 32px));
+  max-height: calc(100dvh - 32px);
+  min-height: 0;
+}
+
+.auth {
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  height: 100%;
+  padding: 24px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.card {
+  width: min(440px, 100%);
+  max-width: 100%;
+  max-height: calc(100dvh - 80px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: clamp(20px, 4vw, 36px);
+}
+
+.stylish-heading {
+  font-size: clamp(27px, 4vw, 32px);
+  line-height: 1.1;
+}
+
+.field input,
+.search,
+.composer input {
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 900px) {
+  body {
+    padding: 10px;
+  }
+
+  .app {
+    height: calc(100dvh - 20px);
+    max-height: calc(100dvh - 20px);
+  }
+
+  .sidebar {
+    width: 300px;
+  }
+
+  .auth {
+    padding: 20px;
+  }
+
+  .card {
+    max-height: calc(100dvh - 50px);
+  }
+}
+
+@media (max-width: 750px) {
+  body {
+    padding: 0;
+    min-height: 100dvh;
+    height: 100dvh;
+    align-items: stretch;
+    overflow: hidden;
+  }
+
+  .app {
+    width: 100%;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: none;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .auth {
+    height: 100%;
+    min-height: 100%;
+    padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 440px;
+    max-height: none;
+    padding: clamp(20px, 6vw, 28px);
+    margin: auto 0;
+    border-radius: 20px;
+  }
+
+  .logo {
+    width: 56px;
+    height: 56px;
+    border-radius: 17px;
+    font-size: 27px;
+  }
+
+  .stylish-heading {
+    margin-top: 15px;
+    font-size: clamp(27px, 9vw, 32px);
+  }
+
+  .sub {
+    margin-bottom: 18px;
+    line-height: 1.45;
+  }
+
+  .tabs {
+    margin-bottom: 16px;
+  }
+
+  .tabs button {
+    padding: 11px 8px;
+    font-size: 13px;
+  }
+
+  .field {
+    margin: 12px 0;
+  }
+
+  .field input {
+    padding: 12px 14px;
+  }
+
+  .primary {
+    margin-top: 14px;
+    padding: 13px;
+  }
+
+  .hint {
+    margin-top: 12px;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .chat {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .chatHead {
+    height: 64px;
+    padding: 10px 14px;
+  }
+
+  .chatHeadActions {
+    gap: 5px;
+  }
+
+  .iconBtn {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+
+  .closeChatBtn {
+    font-size: 0;
+  }
+
+  .closeChatBtn::after {
+    content: "✕";
+    font-size: 15px;
+  }
+
+  .messages {
+    padding: 14px;
+  }
+
+  .bubble {
+    max-width: 88%;
+  }
+
+  .composer {
+    padding: 10px 12px max(10px, env(safe-area-inset-bottom));
+  }
+
+  .send {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+  }
+}
+
+@media (max-width: 380px), (max-height: 650px) {
+  .auth {
+    justify-content: flex-start;
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+
+  .card {
+    padding: 18px;
+    border-radius: 17px;
+  }
+
+  .logo {
+    width: 48px;
+    height: 48px;
+    font-size: 23px;
+    border-radius: 15px;
+  }
+
+  .stylish-heading {
+    margin: 12px 0 5px;
+    font-size: 26px;
+  }
+
+  .sub {
+    font-size: 12px;
+    margin-bottom: 14px;
+  }
+
+  .tabs button {
+    padding: 9px 5px;
+    font-size: 12px;
+  }
+
+  .field {
+    margin: 9px 0;
+  }
+
+  .field label {
+    margin-bottom: 6px;
+  }
+
+  .field input {
+    padding: 10px 12px;
+    border-radius: 11px;
+  }
+
+  .primary {
+    padding: 11px;
+    margin-top: 11px;
+  }
+
+  .hint {
+    font-size: 11px;
+  }
+}
+
 </style>
 </head>
 <body>
