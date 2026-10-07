@@ -12,7 +12,6 @@ html,body{margin:0;padding:0;width:100%;min-height:100vh;font-family:Inter,syste
 button,input{font:inherit}
 button{cursor:pointer;border:0}
 
-/* Center Align Body */
 body{
   display:flex;
   justify-content:center;
@@ -36,14 +35,8 @@ body{
 }
 .screen{height:100%;width:100%;display:flex}
 
-/* Auth Section - Centered */
-.auth{
-  align-items:center;
-  justify-content:center;
-  padding:24px;
-  width:100%;
-  display:flex;
-}
+/* Auth Section */
+.auth{align-items:center;justify-content:center;padding:24px;width:100%;display:flex}
 .card{
   width:min(440px,100%);
   padding:36px;
@@ -56,7 +49,7 @@ body{
 
 .logo{width:62px;height:62px;display:grid;place-items:center;border-radius:20px;background:linear-gradient(135deg,#8b5cf6,#06b6d4);font-size:30px;box-shadow:0 12px 30px rgba(139,92,246,.3)}
 
-/* Custom Scrollbar */
+/* Scrollbar */
 ::-webkit-scrollbar { width:6px; height:6px; }
 ::-webkit-scrollbar-track { background:transparent; }
 ::-webkit-scrollbar-thumb { background:rgba(129,140,248,.25); border-radius:10px; }
@@ -81,18 +74,28 @@ body{
   backdrop-filter:blur(10px);
 }
 .meInfo{display:flex;align-items:center;gap:12px}
+.avatar-wrap{position:relative;cursor:pointer}
+.avatar-wrap:hover .avatar-overlay{opacity:1}
+.avatar-overlay{
+  position:absolute;inset:0;background:rgba(0,0,0,.6);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:12px;
+  opacity:0;transition:opacity .2s;color:#fff;
+}
+.avatar{
+  width:42px;height:42px;flex:0 0 42px;border-radius:50%;
+  display:grid;place-items:center;background:linear-gradient(135deg,#6366f1,#06b6d4);
+  color:#fff;font-weight:800;font-size:15px;position:relative;background-size:cover;background-position:center;
+}
+.onlineDot{position:absolute;bottom:0;right:0;width:11px;height:11px;background:#22c55e;border:2px solid #0e101f;border-radius:50%;display:none}
+
 .meName{font-weight:700;color:#f8fafc;font-size:14.5px}
 .meUser{font-size:12px;color:#818cf8;margin-top:2px}
 .searchWrap{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.05)}
 
 .chatList{flex:1;overflow-y:auto;padding:8px}
-.chatItem{width:100%;display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;margin-bottom:4px;background:transparent;color:#f1f5f9;text-align:left;transition:background .15s}
+.chatItem{width:100%;display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;margin-bottom:4px;background:transparent;color:#f1f5f9;text-align:left;transition:background .15s;cursor:pointer}
 .chatItem:hover{background:rgba(129,140,248,.08)}
 .chatItem.active{background:rgba(114,46,209,.25);border-left:3px solid #818cf8}
-
-.avatar{width:42px;height:42px;flex:0 0 42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#6366f1,#06b6d4);color:#fff;font-weight:800;font-size:15px;position:relative}
-.onlineDot{position:absolute;bottom:0;right:0;width:11px;height:11px;background:#22c55e;border:2px solid #0e101f;border-radius:50%;display:none}
-
 .chatItem .info{flex:1;min-width:0}
 .chatItem .topLine{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px}
 .chatItem .rName{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -103,21 +106,12 @@ body{
 .empty{padding:26px;text-align:center;color:#64748b;font-size:13px;line-height:1.5}
 
 .stylish-heading{
-  margin:18px 0 6px;
-  font-size:32px;
-  font-weight:900;
-  letter-spacing:-0.5px;
+  margin:18px 0 6px;font-size:32px;font-weight:900;letter-spacing:-0.5px;
   background:linear-gradient(90deg,#38bdf8,#818cf8,#c084fc,#38bdf8);
-  background-size:250% auto;
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+  background-size:250% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
   animation:shineGrad 4s linear infinite;
 }
-@keyframes shineGrad{
-  0%{background-position:0% center}
-  100%{background-position:250% center}
-}
-
+@keyframes shineGrad{0%{background-position:0% center}100%{background-position:250% center}}
 .sub{margin:0 0 22px;color:#94a3b8;line-height:1.5;font-size:14px}
 
 .tabs{display:flex;gap:6px;background:#101124;padding:6px;border-radius:14px;margin-bottom:20px;border:1px solid rgba(255,255,255,.06)}
@@ -135,21 +129,19 @@ body{
 .eye-btn:hover{color:#38bdf8}
 .eye-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-/* Forgot Password Link */
 .forgot-wrap{display:flex;justify-content:flex-end;margin-top:6px}
-.forgot-btn{background:none;border:none;color:#818cf8;font-size:12px;font-weight:600;padding:0;text-decoration:none;transition:color .2s}
+.forgot-btn{background:none;border:none;color:#818cf8;font-size:12px;font-weight:600;padding:0;cursor:pointer}
 .forgot-btn:hover{color:#38bdf8;text-decoration:underline}
 
 .primary{width:100%;padding:14px;border-radius:13px;background:linear-gradient(135deg,#7c3aed,#0284c7);color:#fff;font-weight:700;font-size:15px;margin-top:16px;box-shadow:0 10px 25px rgba(124,58,237,.3);transition:opacity .2s}
 .primary:hover{opacity:.95}
 .primary:disabled{opacity:.6;cursor:not-allowed}
-.secondary{padding:8px 14px;border-radius:10px;background:#232644;color:#cbd5e1;font-weight:600;font-size:13px;transition:background .2s}
+.secondary{padding:8px 14px;border-radius:10px;background:#232644;color:#cbd5e1;font-weight:600;font-size:13px}
 .secondary:hover{background:#2e3258}
-
 .hint{font-size:12px;color:#64748b;margin-top:14px;line-height:1.4}
 .error{font-size:13px;color:#ff6b6b;margin-top:10px;min-height:18px;font-weight:600}
 
-/* Chat Area */
+/* Chat Main */
 .chat{flex:1;display:flex;flex-direction:column;min-width:0;background:#0d0e1a}
 .chatHead{height:72px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;background:#101222}
 .chatHeadLeft{display:flex;align-items:center;gap:12px}
@@ -173,19 +165,33 @@ body{
 .theirs{align-self:flex-start;background:#1e213a;color:#f1f5f9;border-bottom-left-radius:4px;border:1px solid rgba(255,255,255,.05)}
 .bubbleBottom{float:right;display:inline-flex;align-items:center;gap:4px;margin-left:14px;margin-top:4px;font-size:10px;color:rgba(255,255,255,.65)}
 
+.bubble-media{max-width:100%;max-height:260px;border-radius:12px;margin-bottom:6px;display:block;cursor:pointer}
+video.bubble-media{background:#000}
+
 .tick{font-size:13px;font-weight:700;line-height:1;margin-left:3px}
 .tick-sent{color:rgba(255,255,255,.55)}
 .tick-delivered{color:rgba(255,255,255,.85)}
 .tick-read{color:#22c55e;font-weight:800}
 
-.composer{display:flex;gap:10px;padding:14px 18px;border-top:1px solid rgba(255,255,255,.07);background:#101222;position:relative}
+/* Composer & Actions */
+.composer{display:flex;align-items:center;gap:8px;padding:12px 18px;border-top:1px solid rgba(255,255,255,.07);background:#101222;position:relative}
+.action-btn{background:rgba(255,255,255,.06);color:#94a3b8;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:18px;transition:all .2s}
+.action-btn:hover{background:rgba(129,140,248,.18);color:#fff}
 .composer input{flex:1;padding:12px 16px;border-radius:14px;border:1px solid #282c4b;background:#17192e;color:#fff;outline:none}
-.composer input:disabled{background:#111222;border-color:#1c1e36;color:#555a75;cursor:not-allowed}
-.send{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#0284c7);color:#fff;font-size:18px;display:grid;place-items:center}
-.send:disabled{opacity:.4;cursor:not-allowed}
+.send{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#0284c7);color:#fff;font-size:18px;display:grid;place-items:center}
+.send:disabled,.action-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* Emoji Tray */
+.emoji-tray{
+  position:absolute;bottom:70px;left:18px;background:#16182e;border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 12px 35px rgba(0,0,0,.6);border-radius:14px;padding:10px;
+  display:none;grid-template-columns:repeat(8, 1fr);gap:6px;max-height:180px;overflow-y:auto;z-index:20;
+}
+.emoji-tray span{font-size:20px;cursor:pointer;padding:6px;border-radius:8px;text-align:center;transition:background .15s}
+.emoji-tray span:hover{background:rgba(255,255,255,.1)}
 
 .welcome{height:100%;display:grid;place-items:center;text-align:center;color:#64748b;padding:30px}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1f223d;border:1px solid rgba(255,255,255,.1);color:#fff;padding:12px 18px;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.5);z-index:20;font-size:13px;display:none}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1f223d;border:1px solid rgba(255,255,255,.1);color:#fff;padding:12px 18px;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.5);z-index:30;font-size:13px;display:none}
 
 @media(max-width:750px){
   body{padding:0}
@@ -250,7 +256,11 @@ body{
     <aside class="sidebar">
       <div class="sideHead">
         <div class="meInfo">
-          <div class="avatar" id="myAvatar">?</div>
+          <div class="avatar-wrap" id="changeAvatarBtn" title="Click to change profile picture">
+            <div class="avatar" id="myAvatar">?</div>
+            <div class="avatar-overlay">📷</div>
+            <input type="file" id="avatarFileInput" accept="image/*" style="display:none">
+          </div>
           <div>
             <div class="meName" id="meName">User</div>
             <div class="meUser" id="meUser">@username</div>
@@ -297,7 +307,17 @@ body{
         </div>
       </div>
 
+      <!-- Emoji Tray Container -->
+      <div class="emoji-tray" id="emojiTray"></div>
+
       <div class="composer" id="composerWrap">
+        <!-- Emoji Button -->
+        <button class="action-btn" id="emojiBtn" type="button" title="Insert Emoji" disabled>😊</button>
+
+        <!-- Media Attachment Button -->
+        <button class="action-btn" id="mediaBtn" type="button" title="Send Photo/Video" disabled>📎</button>
+        <input type="file" id="mediaFileInput" accept="image/*,video/*" style="display:none">
+
         <input id="messageInput" placeholder="Pehle user select karein..." autocomplete="off" disabled>
         <button class="send" id="sendButton" type="button" disabled>➤</button>
       </div>
@@ -336,6 +356,99 @@ function toast(msg){
   toastTimer = setTimeout(function(){ t.style.display = 'none'; }, 2800);
 }
 
+// Set Avatar element helper (photo ya initial)
+function setAvatarElement(el, avatarUrl, username) {
+  if (avatarUrl) {
+    el.style.backgroundImage = 'url(' + avatarUrl + ')';
+    el.textContent = '';
+  } else {
+    el.style.backgroundImage = 'none';
+    el.textContent = initials(username);
+  }
+}
+
+// Emoji Tray Setup
+var commonEmojis = ["😀","😂","😍","🔥","👍","❤️","🎉","😎","😭","🙏","🙌","✨","💯","🥳","🤔","👏","🚀","🫡","🥺","🤣","🤫","🤝","💖","💙"];
+var emojiTray = $('emojiTray');
+commonEmojis.forEach(function(em) {
+  var span = document.createElement('span');
+  span.textContent = em;
+  span.onclick = function() {
+    $('messageInput').value += em;
+    $('messageInput').focus();
+  };
+  emojiTray.appendChild(span);
+});
+
+$('emojiBtn').onclick = function(e) {
+  e.stopPropagation();
+  emojiTray.style.display = (emojiTray.style.display === 'grid') ? 'none' : 'grid';
+};
+
+document.addEventListener('click', function(e) {
+  if (!emojiTray.contains(e.target) && e.target !== $('emojiBtn')) {
+    emojiTray.style.display = 'none';
+  }
+});
+
+// Profile Picture Upload
+$('changeAvatarBtn').onclick = function() { $('avatarFileInput').click(); };
+$('avatarFileInput').onchange = async function(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { toast('Photo 5MB se choti honi chahiye!'); return; }
+
+  toast('Uploading profile picture...');
+  var ext = file.name.split('.').pop();
+  var filePath = 'avatars/' + currentUser.id + '_' + Date.now() + '.' + ext;
+
+  var uploadRes = await supabaseClient.storage.from('chat-media').upload(filePath, file, { upsert: true });
+  if (uploadRes.error) { toast('Upload failed: ' + uploadRes.error.message); return; }
+
+  var publicUrlRes = supabaseClient.storage.from('chat-media').getPublicUrl(filePath);
+  var publicUrl = publicUrlRes.data.publicUrl;
+
+  await supabaseClient.from('profiles').update({ avatar_url: publicUrl }).eq('id', currentUser.id);
+  currentProfile.avatar_url = publicUrl;
+  setAvatarElement($('myAvatar'), publicUrl, currentProfile.username);
+  toast('Profile picture updated successfully!');
+};
+
+// Send Photo/Video via Attachment
+$('mediaBtn').onclick = function() { $('mediaFileInput').click(); };
+$('mediaFileInput').onchange = async function(e) {
+  var file = e.target.files[0];
+  if (!file || !currentConversation || !currentTarget) return;
+
+  var isVideo = file.type.startsWith('video');
+  var isImage = file.type.startsWith('image');
+  if (!isImage && !isVideo) { toast('Sirf images aur videos allowed hain.'); return; }
+  if (file.size > 25 * 1024 * 1024) { toast('File 25MB se kam honi chahiye.'); return; }
+
+  toast('Media sending...');
+  var ext = file.name.split('.').pop();
+  var filePath = 'media/' + currentConversation.id + '/' + Date.now() + '.' + ext;
+
+  var uploadRes = await supabaseClient.storage.from('chat-media').upload(filePath, file);
+  if (uploadRes.error) { toast('Media upload failed: ' + uploadRes.error.message); return; }
+
+  var publicUrl = supabaseClient.storage.from('chat-media').getPublicUrl(filePath).data.publicUrl;
+  var isTargetOnline = onlineUserIds.has(currentTarget.id);
+
+  await supabaseClient.from('direct_messages').insert({
+    conversation_id: currentConversation.id,
+    sender_id: currentUser.id,
+    message: isImage ? '📷 Photo' : '🎥 Video',
+    media_url: publicUrl,
+    media_type: isImage ? 'image' : 'video',
+    status: isTargetOnline ? 'delivered' : 'sent'
+  });
+
+  await supabaseClient.from('conversations').update({ updated_at: new Date().toISOString() }).eq('id', currentConversation.id);
+  loadChatHistory();
+  $('mediaFileInput').value = '';
+};
+
 function closeActiveChat() {
   if (!currentTarget) return;
   currentTarget = null;
@@ -347,15 +460,21 @@ function closeActiveChat() {
   }
 
   $('chatTitle').textContent = 'Select a user';
-  $('chatNickBadge').style.display = 'none';$('chatStatus').textContent = 'Search username on the left to start';
-  $('chatStatus').className = 'chatStatus';$('chatAvatar').innerHTML = '?<div class="onlineDot" id="headOnlineDot"></div>';
-  $('setNickBtn').style.display = 'none';$('closeChatBtn').style.display = 'none';
+  $('chatNickBadge').style.display = 'none';
+  $('chatStatus').textContent = 'Search username on the left to start';
+  $('chatStatus').className = 'chatStatus';
+  setAvatarElement($('chatAvatar'), null, '?');
+  $('setNickBtn').style.display = 'none';
+  $('closeChatBtn').style.display = 'none';
 
   var inp = $('messageInput');
   inp.value = '';
   inp.disabled = true;
   inp.placeholder = 'Pehle user select karein...';
   $('sendButton').disabled = true;
+  $('emojiBtn').disabled = true;
+  $('mediaBtn').disabled = true;
+  emojiTray.style.display = 'none';
 
   $('messages').innerHTML = `
     <div class="welcome">
@@ -378,13 +497,6 @@ window.addEventListener('keydown', function(e) {
     if (currentTarget) closeActiveChat();
   }
 });
-
-$('composerWrap').onclick = function() {
-  if (!currentTarget) {
-    toast('Pehle left side me user search karke select karein!');
-    $('searchInput').focus();
-  }
-};
 
 function setAuthMode(targetMode) {
   mode = targetMode;
@@ -424,7 +536,7 @@ $('forgotBtn').onclick = async function(e) {
     if (resetRes.error) throw resetRes.error;
 
     errEl.style.color = '#22c55e';
-    errEl.textContent = 'Password reset link aapke email par bhej diya gaya hai. Apna inbox check karein.';
+    errEl.textContent = 'Password reset link aapke email par bhej diya gaya hai!';
   } catch (err) {
     errEl.style.color = '#ff6b6b';
     errEl.textContent = err.message || 'Reset link bhejne mein problem aayi.';
@@ -468,25 +580,14 @@ async function executeAuth() {
   try {
     if (mode === 'signup') {
       if (!username) throw new Error('Username enter karein.');
-      if (!/^[A-Za-z0-9_]{3,20}$/.test(username)) throw new Error('Username 3-20 characters ka hona chahiye (sirf letters, numbers, underscore).');
+      if (!/^[A-Za-z0-9_]{3,20}$/.test(username)) throw new Error('Username 3-20 characters ka hona chahiye (letters, numbers, underscore).');
 
-      // 100% Unique & Case-insensitive check (e.g., rohit, Rohit, ROHIT)
-      var checkRes = await supabaseClient
-        .from('profiles')
-        .select('username')
-        .ilike('username', username)
-        .maybeSingle();
-
-      if (checkRes.data) {
-        throw new Error('Yeh username pehle se kisi aur ne le rakha hai. Kripya dusra unique username chunein.');
-      }
+      var checkRes = await supabaseClient.from('profiles').select('username').ilike('username', username).maybeSingle();
+      if (checkRes.data) throw new Error('Yeh username pehle se kisi aur ne le rakha hai. Kripya dusra unique username chunein.');
 
       var authRes = await supabaseClient.auth.signUp({
-        email: email, 
-        password: password,
-        options: { 
-          data: { username: username, display_name: username } 
-        }
+        email: email, password: password,
+        options: { data: { username: username, display_name: username } }
       });
 
       if (authRes.error) throw authRes.error;
@@ -533,7 +634,7 @@ async function showMain(user) {
   currentProfile = profile;
   $('meName').textContent = profile.display_name || profile.username;
   $('meUser').textContent = '@' + profile.username;
-  $('myAvatar').textContent = initials(profile.username);
+  setAvatarElement($('myAvatar'), profile.avatar_url, profile.username);
 
   $('authScreen').style.display = 'none';$('mainScreen').style.display = 'flex';
 
@@ -556,9 +657,7 @@ function setupOnlinePresence() {
     .on('presence', { event: 'sync' }, function() {
       var state = globalChannel.presenceState();
       onlineUserIds.clear();
-      for (var id in state) {
-        onlineUserIds.add(id);
-      }
+      for (var id in state) onlineUserIds.add(id);
       updateActiveUserPresence();
       autoDeliverUndeliveredMessages();
     })
@@ -603,11 +702,8 @@ async function autoDeliverUndeliveredMessages() {
 }
 
 function renderTick(status) {
-  if (status === 'read') {
-    return '<span class="tick tick-read" title="Read">✓✓</span>';
-  } else if (status === 'delivered') {
-    return '<span class="tick tick-delivered" title="Delivered">✓✓</span>';
-  }
+  if (status === 'read') return '<span class="tick tick-read" title="Read">✓✓</span>';
+  if (status === 'delivered') return '<span class="tick tick-delivered" title="Delivered">✓✓</span>';
   return '<span class="tick tick-sent" title="Sent">✓</span>';
 }
 
@@ -651,6 +747,7 @@ function updateHeaderDetails() {
   }
 }
 
+// Left-Side Chat History
 async function loadChatHistory() {
   try {
     var convsRes = await supabaseClient.from('conversations')
@@ -663,12 +760,12 @@ async function loadChatHistory() {
     for (var c of convs) {
       var otherId = (c.user1_id === currentUser.id) ? c.user2_id : c.user1_id;
       
-      var profRes = await supabaseClient.from('profiles').select('id, username, display_name').eq('id', otherId).maybeSingle();
+      var profRes = await supabaseClient.from('profiles').select('id, username, display_name, avatar_url').eq('id', otherId).maybeSingle();
       if (!profRes.data) continue;
       var userObj = profRes.data;
 
       var lastMsgRes = await supabaseClient.from('direct_messages')
-        .select('message, sender_id, status, created_at')
+        .select('message, sender_id, status, created_at, media_type')
         .eq('conversation_id', c.id)
         .order('created_at', { ascending: false })
         .limit(1);
@@ -684,9 +781,7 @@ async function loadChatHistory() {
       });
     }
 
-    chatListItems.sort(function(a, b) {
-      return b.timeMs - a.timeMs;
-    });
+    chatListItems.sort(function(a, b) { return b.timeMs - a.timeMs; });
 
     if (!chatListItems.length) {
       $('chatList').innerHTML = '<div class="empty">No conversations yet.<br>Search a username above to begin.</div>';
@@ -702,16 +797,24 @@ async function loadChatHistory() {
       var tick = (m && m.sender_id === currentUser.id) ? (renderTick(m.status) + ' ') : '';
       var isActive = (currentTarget && currentTarget.id === u.id) ? 'active' : '';
 
+      var avatarStyle = u.avatar_url ? `background-image:url('${u.avatar_url}')` : '';
+      var avatarChar = u.avatar_url ? '' : escapeHtml(initials(u.username));
+
+      var previewText = 'Chat started';
+      if (m) {
+        previewText = m.media_type ? (m.media_type === 'image' ? '📷 Photo' : '🎥 Video') : m.message;
+      }
+
       html += `
         <div class="chatItem ${isActive}" onclick="openChatById('${u.id}')">
-          <div class="avatar">${escapeHtml(initials(u.username))}</div>
+          <div class="avatar" style="${avatarStyle}">${avatarChar}</div>
           <div class="info">
             <div class="topLine">
               <span class="rName">${escapeHtml(title)}</span>
               <span class="rTime">${timeStr}</span>
             </div>
             <div class="bottomLine">
-              <span class="lastMsg">${tick}${escapeHtml(m ? m.message : 'Chat started')}</span>
+              <span class="lastMsg">${tick}${escapeHtml(previewText)}</span>
             </div>
           </div>
         </div>
@@ -740,7 +843,7 @@ async function performSearch(openFirst) {
   var q = $('searchInput').value.trim();
   if (!q) { loadChatHistory(); return; }
 
-  var res = await supabaseClient.from('profiles').select('id, username, display_name')
+  var res = await supabaseClient.from('profiles').select('id, username, display_name, avatar_url')
     .ilike('username', q + '%')
     .neq('id', currentUser.id)
     .limit(15);
@@ -757,9 +860,11 @@ async function performSearch(openFirst) {
 
   $('chatList').innerHTML = res.data.map(function(u) {
     var name = cachedNicknames[u.id] || u.display_name || u.username;
+    var avatarStyle = u.avatar_url ? `background-image:url('${u.avatar_url}')` : '';
+    var avatarChar = u.avatar_url ? '' : escapeHtml(initials(u.username));
     return `
       <div class="chatItem" onclick="openChatById('${u.id}')">
-        <div class="avatar">${escapeHtml(initials(u.username))}</div>
+        <div class="avatar" style="${avatarStyle}">${avatarChar}</div>
         <div class="info">
           <div class="topLine"><span class="rName">${escapeHtml(name)}</span></div>
           <div class="bottomLine">@${escapeHtml(u.username)}</div>
@@ -794,13 +899,17 @@ async function openConversation(target) {
 
   updateHeaderDetails();
   updateActiveUserPresence();
-  $('chatAvatar').innerHTML = initials(target.username) + '<div class="onlineDot" id="headOnlineDot"></div>';
+  setAvatarElement($('chatAvatar'), target.avatar_url, target.username);
+  $('chatAvatar').appendChild($('headOnlineDot'));
+
   $('setNickBtn').style.display = 'inline-flex';$('closeChatBtn').style.display = 'inline-flex';
 
   var inp = $('messageInput');
   inp.disabled = false;
   inp.placeholder = 'Type a message...';
   $('sendButton').disabled = false;
+  $('emojiBtn').disabled = false;
+  $('mediaBtn').disabled = false;
   $('app').classList.add('chat-open');
 
   await loadMessages();
@@ -831,8 +940,21 @@ function renderBubble(m) {
   var wrap = document.createElement('div');
   wrap.className = 'bubble ' + (mine ? 'mine' : 'theirs');
   wrap.dataset.msgId = m.id;
+
+  var mediaHtml = '';
+  if (m.media_url) {
+    if (m.media_type === 'video') {
+      mediaHtml = `<video src="${m.media_url}" controls class="bubble-media"></video>`;
+    } else {
+      mediaHtml = `<img src="${m.media_url}" class="bubble-media" onclick="window.open('${m.media_url}','_blank')"/>`;
+    }
+  }
+
+  var textHtml = m.message ? `<div>${escapeHtml(m.message)}</div>` : '';
+
   wrap.innerHTML = `
-    <span>${escapeHtml(m.message)}</span>
+    ${mediaHtml}
+    ${textHtml}
     <span class="bubbleBottom">${time} ${statusHtml}</span>
   `;
   $('messages').appendChild(wrap);
@@ -880,6 +1002,7 @@ async function sendMessage() {
   var text = input.value.trim();
   if (!text || !currentConversation || !currentTarget) return;
   input.value = '';
+  emojiTray.style.display = 'none';
 
   var isTargetOnline = onlineUserIds.has(currentTarget.id);
   var initialStatus = isTargetOnline ? 'delivered' : 'sent';
