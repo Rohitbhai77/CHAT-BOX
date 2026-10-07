@@ -8,57 +8,77 @@
 
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#0b0c16;color:#eef2ff}
+html,body{margin:0;padding:0;width:100%;min-height:100vh;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#0b0c16;color:#eef2ff}
 button,input{font:inherit}
 button{cursor:pointer;border:0}
 
-body{display:flex;justify-content:center;align-items:center;overflow:hidden;background:radial-gradient(circle at 15% 15%,#261547 0,#0d0e1a 45%,#05060b 100%)}
+/* Center Align Body */
+body{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:radial-gradient(circle at 15% 15%,#261547 0,#0d0e1a 45%,#05060b 100%);
+  padding:16px;
+  overflow:auto;
+}
 
-.app{width:min(100%,1150px);height:min(100%,820px);background:rgba(18,19,34,.92);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.08);box-shadow:0 30px 90px rgba(0,0,0,.6);overflow:hidden;border-radius:20px;display:flex}
+.app{
+  width:min(100%,1150px);
+  height:min(100%,820px);
+  background:rgba(18,19,34,.92);
+  backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 30px 90px rgba(0,0,0,.6);
+  overflow:hidden;
+  border-radius:20px;
+  display:flex;
+  margin:auto;
+}
 .screen{height:100%;width:100%;display:flex}
 
-/* Auth Section */
-.auth{align-items:center;justify-content:center;padding:24px}
-.card{width:min(440px,100%);padding:36px;border-radius:24px;background:rgba(25,27,49,.92);border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 60px rgba(0,0,0,.45)}
+/* Auth Section - Centered */
+.auth{
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  width:100%;
+  display:flex;
+}
+.card{
+  width:min(440px,100%);
+  padding:36px;
+  border-radius:24px;
+  background:rgba(25,27,49,.92);
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+  margin:auto;
+}
 
 .logo{width:62px;height:62px;display:grid;place-items:center;border-radius:20px;background:linear-gradient(135deg,#8b5cf6,#06b6d4);font-size:30px;box-shadow:0 12px 30px rgba(139,92,246,.3)}
 
-/* Custom Sleek Dark Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(129, 140, 248, 0.25);
-  border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(129, 140, 248, 0.5);
-}
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(129, 140, 248, 0.25) transparent;
-}
+/* Custom Scrollbar */
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:rgba(129,140,248,.25); border-radius:10px; }
+::-webkit-scrollbar-thumb:hover { background:rgba(129,140,248,.5); }
+* { scrollbar-width:thin; scrollbar-color:rgba(129,140,248,.25) transparent; }
 
 /* Left Sidebar */
 .sidebar {
-  width: 350px;
-  background: linear-gradient(180deg, #101222 0%, #0c0e1a 100%) !important;
-  border-right: 1px solid rgba(129, 140, 248, 0.12) !important;
-  display: flex;
-  flex-direction: column;
+  width:350px;
+  background:linear-gradient(180deg,#101222 0%,#0c0e1a 100%);
+  border-right:1px solid rgba(129,140,248,.12);
+  display:flex;
+  flex-direction:column;
 }
 .sideHead {
-  padding: 16px 20px;
-  border-bottom: 1px solid rgba(255,255,255,.07);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(18, 20, 38, 0.7) !important;
-  backdrop-filter: blur(10px);
+  padding:16px 20px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(18,20,38,.7);
+  backdrop-filter:blur(10px);
 }
 .meInfo{display:flex;align-items:center;gap:12px}
 .meName{font-weight:700;color:#f8fafc;font-size:14.5px}
@@ -67,8 +87,8 @@ body{display:flex;justify-content:center;align-items:center;overflow:hidden;back
 
 .chatList{flex:1;overflow-y:auto;padding:8px}
 .chatItem{width:100%;display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;margin-bottom:4px;background:transparent;color:#f1f5f9;text-align:left;transition:background .15s}
-.chatItem:hover{background:rgba(129, 140, 248, 0.08) !important}
-.chatItem.active{background:rgba(114, 46, 209, 0.25) !important;border-left:3px solid #818cf8}
+.chatItem:hover{background:rgba(129,140,248,.08)}
+.chatItem.active{background:rgba(114,46,209,.25);border-left:3px solid #818cf8}
 
 .avatar{width:42px;height:42px;flex:0 0 42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#6366f1,#06b6d4);color:#fff;font-weight:800;font-size:15px;position:relative}
 .onlineDot{position:absolute;bottom:0;right:0;width:11px;height:11px;background:#22c55e;border:2px solid #0e101f;border-radius:50%;display:none}
@@ -87,7 +107,7 @@ body{display:flex;justify-content:center;align-items:center;overflow:hidden;back
   font-size:32px;
   font-weight:900;
   letter-spacing:-0.5px;
-  background:linear-gradient(90deg, #38bdf8, #818cf8, #c084fc, #38bdf8);
+  background:linear-gradient(90deg,#38bdf8,#818cf8,#c084fc,#38bdf8);
   background-size:250% auto;
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
@@ -115,6 +135,11 @@ body{display:flex;justify-content:center;align-items:center;overflow:hidden;back
 .eye-btn:hover{color:#38bdf8}
 .eye-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
+/* Forgot Password Link */
+.forgot-wrap{display:flex;justify-content:flex-end;margin-top:6px}
+.forgot-btn{background:none;border:none;color:#818cf8;font-size:12px;font-weight:600;padding:0;text-decoration:none;transition:color .2s}
+.forgot-btn:hover{color:#38bdf8;text-decoration:underline}
+
 .primary{width:100%;padding:14px;border-radius:13px;background:linear-gradient(135deg,#7c3aed,#0284c7);color:#fff;font-weight:700;font-size:15px;margin-top:16px;box-shadow:0 10px 25px rgba(124,58,237,.3);transition:opacity .2s}
 .primary:hover{opacity:.95}
 .primary:disabled{opacity:.6;cursor:not-allowed}
@@ -139,8 +164,8 @@ body{display:flex;justify-content:center;align-items:center;overflow:hidden;back
 
 .iconBtn{background:rgba(255,255,255,.05);color:#cbd5e1;border:1px solid rgba(255,255,255,.08);padding:6px 12px;border-radius:10px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;transition:background .2s}
 .iconBtn:hover{background:rgba(255,255,255,.1);color:#fff}
-.closeChatBtn{background:rgba(239, 68, 68, 0.12);color:#fca5a5;border:1px solid rgba(239, 68, 68, 0.25)}
-.closeChatBtn:hover{background:rgba(239, 68, 68, 0.25);color:#fff}
+.closeChatBtn{background:rgba(239,68,68,.12);color:#fca5a5;border:1px solid rgba(239,68,68,.25)}
+.closeChatBtn:hover{background:rgba(239,68,68,.25);color:#fff}
 
 .messages{flex:1;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:8px;background:radial-gradient(circle at 80% 20%,rgba(124,58,237,.07),transparent 40%)}
 .bubble{max-width:min(70%,520px);padding:10px 14px;border-radius:16px;line-height:1.45;word-break:break-word;font-size:14px;position:relative}
@@ -148,7 +173,6 @@ body{display:flex;justify-content:center;align-items:center;overflow:hidden;back
 .theirs{align-self:flex-start;background:#1e213a;color:#f1f5f9;border-bottom-left-radius:4px;border:1px solid rgba(255,255,255,.05)}
 .bubbleBottom{float:right;display:inline-flex;align-items:center;gap:4px;margin-left:14px;margin-top:4px;font-size:10px;color:rgba(255,255,255,.65)}
 
-/* Tick Styling */
 .tick{font-size:13px;font-weight:700;line-height:1;margin-left:3px}
 .tick-sent{color:rgba(255,255,255,.55)}
 .tick-delivered{color:rgba(255,255,255,.85)}
@@ -164,283 +188,16 @@ body{display:flex;justify-content:center;align-items:center;overflow:hidden;back
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1f223d;border:1px solid rgba(255,255,255,.1);color:#fff;padding:12px 18px;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.5);z-index:20;font-size:13px;display:none}
 
 @media(max-width:750px){
-  body{align-items:stretch}
-  .app{width:100%;height:100%;border:0;border-radius:0}
+  body{padding:0}
+  .app{width:100%;height:100vh;border:0;border-radius:0}
   .sidebar{width:100%}
   .chat{display:none}
   .app.chat-open .sidebar{display:none}
   .app.chat-open .chat{display:flex}
   .backMobile{display:block}
   .bubble{max-width:85%}
+  .card{width:100%;padding:24px;border-radius:20px}
 }
-
-
-/* =========================================================
-   RESPONSIVE FIT FIX
-   Keeps the full UI visible on desktop, tablets and phones.
-   ========================================================= */
-html, body {
-  width: 100%;
-  min-width: 0;
-  min-height: 100%;
-}
-
-body {
-  min-height: 100dvh;
-  height: auto;
-  padding: 16px;
-  overflow: auto;
-}
-
-.app {
-  width: min(1150px, 100%);
-  height: min(820px, calc(100dvh - 32px));
-  max-height: calc(100dvh - 32px);
-  min-height: 0;
-}
-
-.auth {
-  width: 100%;
-  min-width: 0;
-  min-height: 100%;
-  height: 100%;
-  padding: 24px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.card {
-  width: min(440px, 100%);
-  max-width: 100%;
-  max-height: calc(100dvh - 80px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: clamp(20px, 4vw, 36px);
-}
-
-.stylish-heading {
-  font-size: clamp(27px, 4vw, 32px);
-  line-height: 1.1;
-}
-
-.field input,
-.search,
-.composer input {
-  min-width: 0;
-  max-width: 100%;
-}
-
-@media (max-width: 900px) {
-  body {
-    padding: 10px;
-  }
-
-  .app {
-    height: calc(100dvh - 20px);
-    max-height: calc(100dvh - 20px);
-  }
-
-  .sidebar {
-    width: 300px;
-  }
-
-  .auth {
-    padding: 20px;
-  }
-
-  .card {
-    max-height: calc(100dvh - 50px);
-  }
-}
-
-@media (max-width: 750px) {
-  body {
-    padding: 0;
-    min-height: 100dvh;
-    height: 100dvh;
-    align-items: stretch;
-    overflow: hidden;
-  }
-
-  .app {
-    width: 100%;
-    height: 100dvh;
-    min-height: 100dvh;
-    max-height: none;
-    border: 0;
-    border-radius: 0;
-  }
-
-  .auth {
-    height: 100%;
-    min-height: 100%;
-    padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
-    overflow-y: auto;
-    overflow-x: hidden;
-    align-items: flex-start;
-    justify-content: center;
-  }
-
-  .card {
-    width: 100%;
-    max-width: 440px;
-    max-height: none;
-    padding: clamp(20px, 6vw, 28px);
-    margin: auto 0;
-    border-radius: 20px;
-  }
-
-  .logo {
-    width: 56px;
-    height: 56px;
-    border-radius: 17px;
-    font-size: 27px;
-  }
-
-  .stylish-heading {
-    margin-top: 15px;
-    font-size: clamp(27px, 9vw, 32px);
-  }
-
-  .sub {
-    margin-bottom: 18px;
-    line-height: 1.45;
-  }
-
-  .tabs {
-    margin-bottom: 16px;
-  }
-
-  .tabs button {
-    padding: 11px 8px;
-    font-size: 13px;
-  }
-
-  .field {
-    margin: 12px 0;
-  }
-
-  .field input {
-    padding: 12px 14px;
-  }
-
-  .primary {
-    margin-top: 14px;
-    padding: 13px;
-  }
-
-  .hint {
-    margin-top: 12px;
-  }
-
-  .sidebar {
-    width: 100%;
-  }
-
-  .chat {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .chatHead {
-    height: 64px;
-    padding: 10px 14px;
-  }
-
-  .chatHeadActions {
-    gap: 5px;
-  }
-
-  .iconBtn {
-    padding: 6px 8px;
-    font-size: 11px;
-  }
-
-  .closeChatBtn {
-    font-size: 0;
-  }
-
-  .closeChatBtn::after {
-    content: "✕";
-    font-size: 15px;
-  }
-
-  .messages {
-    padding: 14px;
-  }
-
-  .bubble {
-    max-width: 88%;
-  }
-
-  .composer {
-    padding: 10px 12px max(10px, env(safe-area-inset-bottom));
-  }
-
-  .send {
-    width: 44px;
-    height: 44px;
-    flex: 0 0 44px;
-  }
-}
-
-@media (max-width: 380px), (max-height: 650px) {
-  .auth {
-    justify-content: flex-start;
-    padding-top: 14px;
-    padding-bottom: 14px;
-  }
-
-  .card {
-    padding: 18px;
-    border-radius: 17px;
-  }
-
-  .logo {
-    width: 48px;
-    height: 48px;
-    font-size: 23px;
-    border-radius: 15px;
-  }
-
-  .stylish-heading {
-    margin: 12px 0 5px;
-    font-size: 26px;
-  }
-
-  .sub {
-    font-size: 12px;
-    margin-bottom: 14px;
-  }
-
-  .tabs button {
-    padding: 9px 5px;
-    font-size: 12px;
-  }
-
-  .field {
-    margin: 9px 0;
-  }
-
-  .field label {
-    margin-bottom: 6px;
-  }
-
-  .field input {
-    padding: 10px 12px;
-    border-radius: 11px;
-  }
-
-  .primary {
-    padding: 11px;
-    margin-top: 11px;
-  }
-
-  .hint {
-    font-size: 11px;
-  }
-}
-
 </style>
 </head>
 <body>
@@ -477,6 +234,9 @@ body {
               <circle cx="12" cy="12" r="3"></circle>
             </svg>
           </button>
+        </div>
+        <div class="forgot-wrap" id="forgotWrap">
+          <button type="button" class="forgot-btn" id="forgotBtn">Forgot Password?</button>
         </div>
       </div>
 
@@ -573,10 +333,9 @@ function toast(msg){
   t.textContent = msg;
   t.style.display = 'block';
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(function(){ t.style.display = 'none'; }, 2600);
+  toastTimer = setTimeout(function(){ t.style.display = 'none'; }, 2800);
 }
 
-// Close Active Chat Function
 function closeActiveChat() {
   if (!currentTarget) return;
   currentTarget = null;
@@ -588,12 +347,9 @@ function closeActiveChat() {
   }
 
   $('chatTitle').textContent = 'Select a user';
-  $('chatNickBadge').style.display = 'none';
-  $('chatStatus').textContent = 'Search username on the left to start';
-  $('chatStatus').className = 'chatStatus';
-  $('chatAvatar').innerHTML = '?<div class="onlineDot" id="headOnlineDot"></div>';
-  $('setNickBtn').style.display = 'none';
-  $('closeChatBtn').style.display = 'none';
+  $('chatNickBadge').style.display = 'none';$('chatStatus').textContent = 'Search username on the left to start';
+  $('chatStatus').className = 'chatStatus';$('chatAvatar').innerHTML = '?<div class="onlineDot" id="headOnlineDot"></div>';
+  $('setNickBtn').style.display = 'none';$('closeChatBtn').style.display = 'none';
 
   var inp = $('messageInput');
   inp.value = '';
@@ -617,12 +373,9 @@ function closeActiveChat() {
 $('closeChatBtn').onclick = closeActiveChat;
 $('backMobile').onclick = closeActiveChat;
 
-// ESC Key listener
 window.addEventListener('keydown', function(e) {
   if (e.key === 'Escape' || e.keyCode === 27) {
-    if (currentTarget) {
-      closeActiveChat();
-    }
+    if (currentTarget) closeActiveChat();
   }
 });
 
@@ -638,12 +391,48 @@ function setAuthMode(targetMode) {
   var isSignup = targetMode === 'signup';
   $('loginTab').classList.toggle('active', !isSignup);
   $('signupTab').classList.toggle('active', isSignup);$('usernameField').style.display = isSignup ? 'block' : 'none';
+  $('forgotWrap').style.display = isSignup ? 'none' : 'flex';
   $('authButton').textContent = isSignup ? 'Create account' : 'Login';
   $('password').setAttribute('autocomplete', isSignup ? 'new-password' : 'current-password');
   $('authError').textContent = '';
 }
 
 $('loginTab').onclick = function(e) { e.preventDefault(); setAuthMode('login'); };$('signupTab').onclick = function(e) { e.preventDefault(); setAuthMode('signup'); };
+
+// Forgot Password Feature
+$('forgotBtn').onclick = async function(e) {
+  e.preventDefault();
+  var email = $('email').value.trim();
+  var errEl = $('authError');
+  errEl.textContent = '';
+
+  if (!email) {
+    errEl.style.color = '#ff6b6b';
+    errEl.textContent = 'Pehle email box mein apna registered email daalein.';
+    $('email').focus();
+    return;
+  }
+
+  var btn = $('forgotBtn');
+  btn.disabled = true;
+  btn.textContent = 'Sending link...';
+
+  try {
+    var resetRes = await supabaseClient.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin
+    });
+    if (resetRes.error) throw resetRes.error;
+
+    errEl.style.color = '#22c55e';
+    errEl.textContent = 'Password reset link aapke email par bhej diya gaya hai. Apna inbox check karein.';
+  } catch (err) {
+    errEl.style.color = '#ff6b6b';
+    errEl.textContent = err.message || 'Reset link bhejne mein problem aayi.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Forgot Password?';
+  }
+};
 
 $('eyeToggleBtn').onclick = function(e) {
   e.preventDefault();
@@ -668,6 +457,7 @@ async function executeAuth() {
   var username = $('username').value.trim();
 
   if (!email || !password) {
+    errEl.style.color = '#ff6b6b';
     errEl.textContent = 'Email aur password likhna zaroori hai.';
     return;
   }
@@ -678,14 +468,25 @@ async function executeAuth() {
   try {
     if (mode === 'signup') {
       if (!username) throw new Error('Username enter karein.');
-      if (!/^[A-Za-z0-9_]{3,20}$/.test(username)) throw new Error('Username 3-20 characters ka hona chahiye.');
+      if (!/^[A-Za-z0-9_]{3,20}$/.test(username)) throw new Error('Username 3-20 characters ka hona chahiye (sirf letters, numbers, underscore).');
 
-      var checkRes = await supabaseClient.from('profiles').select('id').eq('username', username).maybeSingle();
-      if (checkRes.data) throw new Error('Yeh username pehle se exist karta hai.');
+      // 100% Unique & Case-insensitive check (e.g., rohit, Rohit, ROHIT)
+      var checkRes = await supabaseClient
+        .from('profiles')
+        .select('username')
+        .ilike('username', username)
+        .maybeSingle();
+
+      if (checkRes.data) {
+        throw new Error('Yeh username pehle se kisi aur ne le rakha hai. Kripya dusra unique username chunein.');
+      }
 
       var authRes = await supabaseClient.auth.signUp({
-        email: email, password: password,
-        options: { data: { username: username, display_name: username } }
+        email: email, 
+        password: password,
+        options: { 
+          data: { username: username, display_name: username } 
+        }
       });
 
       if (authRes.error) throw authRes.error;
@@ -850,10 +651,8 @@ function updateHeaderDetails() {
   }
 }
 
-// Guaranteed Left-Side Chat History
 async function loadChatHistory() {
   try {
-    // 1. Fetch conversations
     var convsRes = await supabaseClient.from('conversations')
       .select('id, user1_id, user2_id, updated_at')
       .or('user1_id.eq.' + currentUser.id + ',user2_id.eq.' + currentUser.id);
@@ -864,12 +663,10 @@ async function loadChatHistory() {
     for (var c of convs) {
       var otherId = (c.user1_id === currentUser.id) ? c.user2_id : c.user1_id;
       
-      // Fetch user profile
       var profRes = await supabaseClient.from('profiles').select('id, username, display_name').eq('id', otherId).maybeSingle();
       if (!profRes.data) continue;
       var userObj = profRes.data;
 
-      // Fetch last message for exact time and sorting
       var lastMsgRes = await supabaseClient.from('direct_messages')
         .select('message, sender_id, status, created_at')
         .eq('conversation_id', c.id)
@@ -887,7 +684,6 @@ async function loadChatHistory() {
       });
     }
 
-    // Sort by most recent interaction (latest message always on top)
     chatListItems.sort(function(a, b) {
       return b.timeMs - a.timeMs;
     });
