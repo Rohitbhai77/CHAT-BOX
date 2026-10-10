@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Chat Box</title>
 <link rel="icon" type="image/png" href="icon.png">
-<link rel="icon" type="image/png" href="icon.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -271,10 +270,12 @@ body {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   flex-shrink: 0;
+  gap: 12px;
 }
 
-.meInfo { display: flex; align-items: center; gap: 12px; }
-.avatar-wrap { position: relative; cursor: pointer; }
+.meInfo { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1; }
+.meInfo > div:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.avatar-wrap { position: relative; cursor: pointer; flex-shrink: 0; }
 .avatar-wrap:hover .avatar-overlay { opacity: 1; }
 .avatar-overlay {
   position: absolute; inset: 0; background: rgba(0,0,0,.65); border-radius: 50%;
@@ -292,8 +293,8 @@ body {
   background: #22c55e; border: 2px solid #0e101f; border-radius: 50%; display: none;
 }
 
-.meName { font-weight: 700; color: var(--text-main); font-size: 15px; }
-.meUser { font-size: 12px; color: #818cf8; margin-top: 2px; }
+.meName { font-weight: 700; color: var(--text-main); font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.meUser { font-size: 12px; color: #818cf8; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .searchWrap { padding: 14px 16px; border-bottom: 1px solid var(--border-sub); flex-shrink: 0; }
 
 /* ------------------- Chat History / Grid Card Improvement ------------------- */
@@ -393,7 +394,7 @@ body {
 .primary:active { transform: scale(0.98); }
 .primary:disabled { opacity: .6; cursor: not-allowed; }
 
-.secondary { padding: 8px 12px; border-radius: 10px; background: rgba(129,140,248,.1); color: var(--text-main); font-weight: 600; font-size: 12.5px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border-sub); }
+.secondary { padding: 8px 12px; border-radius: 10px; background: rgba(129,140,248,.1); color: var(--text-main); font-weight: 600; font-size: 12.5px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border-sub); flex-shrink: 0; white-space: nowrap; }
 .secondary:hover { background: rgba(129,140,248,.18); }
 
 .hint { font-size: 11.5px; color: var(--text-sub); margin-top: 14px; line-height: 1.4; }
@@ -756,7 +757,7 @@ video.bubble-media { background: #000; }
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
           </button>
-          <div class="avatar" id="chatAvatar">?<div class="onlineDot" id="headOnlineDot"></div></div>
+          <div class="avatar" id="chatAvatar" style="background-image:url('icon.png'); background-size:cover; background-position:center;"><div class="onlineDot" id="headOnlineDot"></div></div>
           <div>
             <div class="chatTitleWrap">
               <span class="chatTitle" id="chatTitle">Select a user</span>
@@ -790,8 +791,8 @@ video.bubble-media { background: #000; }
 
       <div class="composer" id="composerWrap">
         <button class="action-btn" id="emojiBtn" type="button" title="Insert Emoji" disabled>😊</button>
-        <button class="action-btn" id="mediaBtn" type="button" title="Send Photo/Video" disabled>📎</button>
-        <input type="file" id="mediaFileInput" accept="image/*,video/*" style="display:none">
+        <button class="action-btn" id="mediaBtn" type="button" title="Send Photo/Video/GIF" disabled>📎</button>
+        <input type="file" id="mediaFileInput" accept="image/*,video/*,.gif,image/gif" style="display:none">
 
         <input id="messageInput" placeholder="Pehle user select karein..." autocomplete="off" disabled>
         <button class="send" id="sendButton" type="button" disabled>
@@ -837,6 +838,7 @@ video.bubble-media { background: #000; }
     <div class="zoom-control">
       <span>Zoom:</span>
       <input type="range" id="cropZoomSlider" min="0.5" max="3" step="0.05" value="1">
+      <button type="button" class="secondary" id="cropRotateBtn" title="Rotate 90°" style="padding: 6px 10px; font-size: 12px;">🔄 Rotate</button>
     </div>
 
     <div class="game-modal-actions">
@@ -916,11 +918,26 @@ video.bubble-media { background: #000; }
   </div>
 </div>
 
+<!-- Image Lightbox Modal -->
+<div class="modal-backdrop" id="imageLightboxModal">
+  <div style="position:relative; max-width:90vw; max-height:90vh; display:flex; align-items:center; justify-content:center;">
+    <button class="modal-close-x" id="lightboxCloseX" style="position:absolute; top:-40px; right:0;" title="Close">✕</button>
+    <img id="lightboxImage" src="" style="max-width:100%; max-height:85vh; object-fit:contain; border-radius:12px; box-shadow: 0 20px 60px rgba(0,0,0,0.8);">
+  </div>
+</div>
+
 <script>
 var SUPABASE_URL = 'https://qtftkrssonozonsxhiqn.supabase.co';
 var SUPABASE_KEY = 'sb_publishable_bUvA4RRkBVqs8hq5o8_XNg_DOSfV7fY';
 
-var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+    storage: window.localStorage
+  }
+});
 
 var mode = 'login';
 var currentUser = null;
@@ -1012,7 +1029,7 @@ function playNotificationSound() {
     audio.play().catch(function(){});
   } catch(e){}
 }
-document.addEventListener('click', function() { playNotificationSound(); }, { once: true });
+document.addEventListener('click', function() { /* audio context unlock */ }, { once: true });
 
 var activePromptCallback = null;
 function showGamePrompt(title, desc, defaultValue, callback) {
@@ -1096,8 +1113,22 @@ $('avatarMenuModal').addEventListener('click', function(e) { if (e.target === $(
 $('customConfirmModal').addEventListener('click', function(e) { if (e.target === $('customConfirmModal')) closeGameConfirm(false); });
 $('customPromptModal').addEventListener('click', function(e) { if (e.target === $('customPromptModal')) closeGamePrompt(null); });
 
+function openImageModal(url) {
+  $('lightboxImage').src = url;
+  $('imageLightboxModal').classList.add('open');
+}
+function closeImageModal() {
+  $('imageLightboxModal').classList.remove('open');
+  $('lightboxImage').src = '';
+}
+$('lightboxCloseX').onclick = closeImageModal;
+$('imageLightboxModal').onclick = function(e) {
+  if (e.target === $('imageLightboxModal')) closeImageModal();
+};
+
 window.addEventListener('keydown', function(e) {
   if (e.key === 'Escape' || e.keyCode === 27) {
+    if ($('imageLightboxModal').classList.contains('open')) { closeImageModal(); return; }
     if ($('avatarCropModal').classList.contains('open')) { closeCropModal(); return; }
     if ($('avatarMenuModal').classList.contains('open')) { $('avatarMenuModal').classList.remove('open'); return; }
     if ($('customConfirmModal').classList.contains('open')) { closeGameConfirm(false); return; }
@@ -1182,6 +1213,7 @@ var cropImage = new Image();
 var cropScale = 1;
 var cropPanX = 0;
 var cropPanY = 0;
+var cropRotation = 0;
 var isPanning = false;
 var startMouseX = 0;
 var startMouseY = 0;
@@ -1203,6 +1235,7 @@ $('avatarFileInput').onchange = function(e) {
       cropScale = 1;
       cropPanX = 0;
       cropPanY = 0;
+      cropRotation = 0;
       $('cropZoomSlider').value = 1;
       $('avatarCropModal').classList.add('open');
       renderCropCanvas();
@@ -1228,7 +1261,11 @@ function renderCropCanvas() {
   var drawW = cropImage.width * currentScale;
   var drawH = cropImage.height * currentScale;
 
-  ctx.drawImage(cropImage, cx - drawW / 2, cy - drawH / 2, drawW, drawH);
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate((cropRotation * Math.PI) / 180);
+  ctx.drawImage(cropImage, -drawW / 2, -drawH / 2, drawW, drawH);
+  ctx.restore();
 }
 
 var cropBox = $('cropBox');
@@ -1265,8 +1302,14 @@ $('cropZoomSlider').addEventListener('input', function(e) {
   renderCropCanvas();
 });
 
+$('cropRotateBtn').onclick = function() {
+  cropRotation = (cropRotation + 90) % 360;
+  renderCropCanvas();
+};
+
 function closeCropModal() {
   $('avatarCropModal').classList.remove('open');
+  $('avatarMenuModal').classList.remove('open');
   $('avatarFileInput').value = '';
 }
 $('cropCancelBtn').onclick = closeCropModal;
@@ -1359,8 +1402,9 @@ $('mediaFileInput').onchange = async function(e) {
   if (!file || !currentConversation || !currentTarget) return;
 
   var isVideo = file.type.startsWith('video');
-  var isImage = file.type.startsWith('image');
-  if (!isImage && !isVideo) { toast('Sirf images aur videos allowed hain.'); return; }
+  var isGif = file.type === 'image/gif' || file.name.toLowerCase().endsWith('.gif');
+  var isImage = file.type.startsWith('image') || isGif;
+  if (!isImage && !isVideo) { toast('Sirf images, GIFs aur videos allowed hain.'); return; }
 
   toast('Media sending...');
   var ext = file.name.split('.').pop();
@@ -1375,9 +1419,9 @@ $('mediaFileInput').onchange = async function(e) {
   var insRes = await supabaseClient.from('direct_messages').insert({
     conversation_id: currentConversation.id,
     sender_id: currentUser.id,
-    message: isImage ? '📷 Photo' : '🎥 Video',
+    message: isGif ? '🎞️ GIF' : (isImage ? '📷 Photo' : '🎥 Video'),
     media_url: publicUrl,
-    media_type: isImage ? 'image' : 'video',
+    media_type: isGif ? 'gif' : (isImage ? 'image' : 'video'),
     status: isTargetOnline ? 'delivered' : 'sent'
   }).select().single();
 
@@ -1410,8 +1454,10 @@ function closeActiveChat() {
   $('chatStatus').className = 'chatStatus';
   
   var chatAv = $('chatAvatar');
-  chatAv.style.backgroundImage = 'none';
-  chatAv.innerHTML = '?<div class="onlineDot" id="headOnlineDot"></div>';
+  chatAv.style.backgroundImage = "url('icon.png')";
+  chatAv.style.backgroundSize = "cover";
+  chatAv.style.backgroundPosition = "center";
+  chatAv.innerHTML = '<div class="onlineDot" id="headOnlineDot"></div>';
 
   $('setNickBtn').style.display = 'none';
   $('closeChatBtn').style.display = 'none';
@@ -1800,7 +1846,7 @@ async function loadChatHistory() {
 
       var previewText = 'Chat started';
       if (m) {
-        previewText = m.media_type ? (m.media_type === 'image' ? '📷 Photo' : '🎥 Video') : m.message;
+        previewText = m.media_type ? (m.media_type === 'gif' ? '🎞️ GIF' : (m.media_type === 'image' ? '📷 Photo' : '🎥 Video')) : m.message;
       }
 
       var badgeHtml = item.unreadCount > 0 ? `<span class="unread-badge">${item.unreadCount}</span>` : '';
@@ -1978,7 +2024,7 @@ function renderBubble(m) {
     if (m.media_type === 'video') {
       mediaHtml = `<video src="${m.media_url}" controls class="bubble-media"></video>`;
     } else {
-      mediaHtml = `<img src="${m.media_url}" class="bubble-media" onclick="window.open('${m.media_url}','_blank')"/>`;
+      mediaHtml = `<img src="${m.media_url}" class="bubble-media" onclick="openImageModal('${m.media_url}')"/>`;
     }
   }
 
